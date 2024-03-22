@@ -32,6 +32,14 @@ app.route('/_api/package.json')
       res.type('txt').send(data.toString());
     });
   });
+  let responceObject={};
+  app.get('/api/timestamp/:input',(req,res)=>{
+    let input=req.params.input;
+    if(input.includes('-')){
+      responceObject['unix']=new Date(input).getTime();
+    }
+  res.json(responceObject);
+  })
   
 app.route('/')
     .get(function(req, res) {
