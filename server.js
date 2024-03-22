@@ -32,27 +32,36 @@ app.route('/_api/package.json')
       res.type('txt').send(data.toString());
     });
   });
-  let responceObject={};
-  app.get('/api/timestamp/:input',(req,res)=>{
-    let input=req.params.input;
-    if(input.includes('-')){
-      responceObject['unix']=new Date(input).getTime();
-      responceObject['utc']=new Date(input).toUTCString();
-    } else {
-      input=parseInt(input);
-      responceObject['unix']=new Date(input).getTime();
-      responceObject['utc']=new Date(input).toUTCString();
+  app.get("/api/:date?", (req,res) => {
+    let input = req.params.date;
+    let isValidDate = Date.parse(input); 
+  let isValidUnixNumber = /^[0-9]+$/.test(input)
+  let isEmpty = input == "" || input == null;
+  let unix_output = 0;
+  let utc_output  = "";
+    
+    if (isValidDate) {
+      unix_output = new Date(input);
+      utc_output  = unix_output.toUTCString();
+     
+      return res.json({unix : unix_output.valueOf(), utc : utc_output});
     }
-    if(!responceObject['unix'] ||!responceObject['utc']){
-  res.json({error:'Invalid Date'});
+    else if (isNaN(isValidDate) && isValidUnixNumber) {
+      unix_output = new Date(parseInt(input));
+      utc_output  = unix_output.toUTCString();
+      return res.json({unix : unix_output.valueOf(), utc : utc_output});
     }
-  res.json(responceObject);
-  })
-  app.get('/api/timestamp',(req,res)=>{
-    responceObject['unix']=new Date().getTime();
-    responceObject['utc']=new Date().getTime().toUTCString();
-    res.json(responceObject);
-  })
+    else if (isEmpty) {
+      unix_output = new Date();
+      utc_output  = unix_output.toUTCString();
+      return res.json({unix : unix_output.valueOf(), utc : utc_output});  
+    }
+    else {
+      res.json({error: "Invalid Date"});
+    }
+    
+  });
+  
   
 app.route('/')
     .get(function(req, res) {
