@@ -41,7 +41,10 @@ app.route('/_api/package.json')
     } else {
       input=parseInt(input);
       responceObject['unix']=new Date(input).getTime();
-     
+      responceObject['utc']=new Date(input).toUTCString();
+    }
+    if(!responceObject['unix'] ||!responceObject['utc']){
+  res.json({error:'Invalid Date'});
     }
   res.json(responceObject);
   })
