@@ -48,6 +48,11 @@ app.route('/_api/package.json')
     }
   res.json(responceObject);
   })
+  app.get('/api/timestamp',(req,res)=>{
+    responceObject['unix']=new Date().getTime();
+    responceObject['utc']=new Date().getTime().toUTCString();
+    res.json(responceObject);
+  })
   
 app.route('/')
     .get(function(req, res) {
