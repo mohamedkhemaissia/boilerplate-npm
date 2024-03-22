@@ -37,6 +37,11 @@ app.route('/_api/package.json')
     let input=req.params.input;
     if(input.includes('-')){
       responceObject['unix']=new Date(input).getTime();
+      responceObject['utc']=new Date(input).toUTCString();
+    } else {
+      input=parseInt(input);
+      responceObject['unix']=new Date(input).getTime();
+     
     }
   res.json(responceObject);
   })
